@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Social } from "../../components/social";
 
 import { FiFolder } from "react-icons/fi";
@@ -5,18 +6,84 @@ import { AiOutlineInstagram, AiOutlineGithub } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { RiTwitterXFill } from "react-icons/ri";
 
+import { db } from "../../services/firebaseConnection";
+import {
+  getDocs,
+  collection,
+  orderBy,
+  query,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+
 import logoImg from "../../../src/assets/logo.png";
-import { Link } from "react-router-dom";
+
+interface LinkProps {
+  id: string;
+  name: string;
+  url: string;
+}
+
+interface SocialLinkProps {
+  instagram: string;
+  twitter: string;
+  linkedin: string;
+  github: string;
+}
 
 export function Home() {
+  const [links, setLinks] = useState<LinkProps[]>([]);
+  const [socialLinks, setSocialLinks] = useState<SocialLinkProps>();
+
+  useEffect(() => {
+    function loadLinks() {
+      const linksRef = collection(db, "Linker");
+      const queryRef = query(linksRef, orderBy("created", "asc"));
+
+      getDocs(queryRef)
+        .then((snapshot) => {
+          const list = [] as LinkProps[];
+
+          snapshot.forEach((doc) => {
+            list.push({
+              id: doc.id,
+              name: doc.data().name,
+              url: doc.data().url,
+            });
+          });
+
+          setLinks(list);
+        })
+        .catch(() => {});
+    }
+
+    loadLinks();
+  }, []);
+
+  useEffect(() => {
+    function loadSocialLinks() {
+      const docRef = doc(db, "Social", "link");
+      getDoc(docRef).then((snapshot) => {
+        if (snapshot.data() !== undefined) {
+          setSocialLinks({
+            instagram: snapshot.data()?.instagram,
+            twitter: snapshot.data()?.twitter,
+            linkedin: snapshot.data()?.linkedin,
+            github: snapshot.data()?.github,
+          });
+        }
+      });
+    }
+
+    loadSocialLinks();
+  }, []);
+
   const sectionClasses =
-    "border border-orangeLinker bg-transparent text-white mb-4 w-full py-2 rounded-lg select-none cursor-pointer transition-all duration-300 ease-in-out hover:bg-orangeLinker hover:text-neutral-900 font-medium";
+    "border border-orangeLinker bg-transparent text-white mb-4 w-full py-2 rounded-lg select-none cursor-pointer font-medium transition-all duration-300 ease-in-out hover:bg-orangeLinker hover:text-neutral-900 hover:font-semibold ";
 
   return (
-    <div className="flex flex-col w-full py-4 items-center justify-center cursor-default">
-      <Link to="/admin">
-        <img src={logoImg} alt="Linker" className="w-52 h-auto my-8" />
-      </Link>
+    <div className="flex flex-col w-full py-4 h-screen items-center justify-center cursor-default">
+      <img src={logoImg} alt="Linker" className="w-52 h-auto my-8" />
 
       <h1 className="md:text-4xl text-2xl font-bold text-white">
         Guilherme Bustamante
@@ -31,47 +98,33 @@ export function Home() {
       </div>
 
       <main className="flex flex-col w-11/12 max-w-xl text-center">
-        <section className={sectionClasses}>
-          <a>
-            <p className="text-base md:text-lg">DriveX</p>
-          </a>
-        </section>
+        {links.map((link) => (
+          <section key={link.id} className={sectionClasses}>
+            <a href={link.url} target="_blank">
+              <p className="text-base md:text-lg">{link.name}</p>
+            </a>
+          </section>
+        ))}
 
-        <section className={sectionClasses}>
-          <a>
-            <p className="text-base md:text-lg">Delimix</p>
-          </a>
-        </section>
+        {socialLinks && Object.keys(socialLinks).length > 0 && (
+          <footer className="flex justify-center gap-3 my-4">
+            <Social url={socialLinks?.instagram}>
+              <AiOutlineInstagram size={35} />
+            </Social>
 
-        <section className={sectionClasses}>
-          <a>
-            <p className="text-base md:text-lg">Weather Tracker</p>
-          </a>
-        </section>
+            <Social url={socialLinks?.twitter}>
+              <RiTwitterXFill size={35} />
+            </Social>
 
-        <section className={sectionClasses}>
-          <a>
-            <p className="text-base md:text-lg">James Webb Space Telescope</p>
-          </a>
-        </section>
+            <Social url={socialLinks?.linkedin}>
+              <FaLinkedinIn size={35} />
+            </Social>
 
-        <footer className="flex justify-center gap-3 my-4">
-          <Social url="https://www.instagram.com/guibus_dev/">
-            <AiOutlineInstagram size={35} color="#fff" />
-          </Social>
-
-          <Social url="https://twitter.com/guibus_dev">
-            <RiTwitterXFill size={35} color="#fff" />
-          </Social>
-
-          <Social url="https://www.linkedin.com/in/gui-bus/">
-            <FaLinkedinIn size={35} color="#fff" />
-          </Social>
-
-          <Social url="https://github.com/gui-bus">
-            <AiOutlineGithub size={35} color="#fff" />
-          </Social>
-        </footer>
+            <Social url={socialLinks?.github}>
+              <AiOutlineGithub size={35} />
+            </Social>
+          </footer>
+        )}
       </main>
     </div>
   );
