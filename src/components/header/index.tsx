@@ -1,4 +1,4 @@
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiHome, FiLink, FiShare2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 import { auth } from "../../services/firebaseConnection";
@@ -14,27 +14,26 @@ const buttonClasses =
 export function Header() {
   async function handleLogout() {
     await signOut(auth);
-    toast.success("Logout realizado com sucesso! \n Até a próxima 😁")
+    toast.success("Logout realizado com sucesso! \n Até a próxima 😁");
   }
 
   return (
     <header className="w-full max-w-2xl mt-4 px-2">
       <nav className="w-full bg-orangeLinker h-12 flex items-center justify-around rounded-md font-medium text-white">
         <div className="flex gap-4">
-          <Link to="/" className={hoverClasses}>
-            Home
+          <Link to="/" className={hoverClasses} title="Página inicial">
+            <FiHome size={24} />
           </Link>
-          <Link to="/admin" className={hoverClasses}>
-            Links
+          <Link to="/admin" className={hoverClasses} title="Links">
+            <FiLink size={24} />
           </Link>
-          <Link to="/admin/social" className={hoverClasses}>
-            Social
+          <Link to="/admin/social" className={hoverClasses} title="Redes sociais">
+            <FiShare2 size={24} />
           </Link>
         </div>
 
-        <button className={buttonClasses} onClick={handleLogout}>
-          <span className="hidden md:block">Logout</span>{" "}
-          <FiLogOut size={24} color="#fff" />
+        <button className={buttonClasses} onClick={handleLogout} title="Logout">
+          <FiLogOut size={24} color="#fff"/>
         </button>
       </nav>
     </header>
