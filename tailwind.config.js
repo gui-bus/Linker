@@ -2,7 +2,12 @@
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        orangeLinker: "#ea6c22",
+        orangeLinkerHover: "#ff8500",
+      },
+    },
   },
   plugins: [],
 };
