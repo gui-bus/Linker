@@ -24,13 +24,12 @@ export function Login() {
 
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        console.log("Logado com sucesso");
-        toast.success("Logado com sucesso!");
+        toast.success("Login realizado com sucesso! 🥳");
         navigate("/admin", { replace: true });
       })
       .catch((error) => {
         console.log("Erro ao fazer login: " + error);
-        toast.error("Credenciais invalidas!");
+        toast.error("Erro ao fazer login 😔 \n Favor verificar suas credenciais!");
       });
   }
 
