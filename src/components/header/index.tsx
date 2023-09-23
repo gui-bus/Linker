@@ -19,7 +19,7 @@ export function Header() {
 
   return (
     <header className="w-full max-w-2xl mt-4 px-2">
-      <nav className="w-full bg-orangeLinker h-12 flex items-center justify-around rounded-md font-medium">
+      <nav className="w-full bg-orangeLinker h-12 flex items-center justify-around rounded-md font-medium text-white">
         <div className="flex gap-4">
           <Link to="/" className={hoverClasses}>
             Home

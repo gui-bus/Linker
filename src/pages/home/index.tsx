@@ -1,6 +1,6 @@
 import { Social } from "../../components/social";
 
-import { FiLink } from "react-icons/fi";
+import { FiFolder } from "react-icons/fi";
 import { AiOutlineInstagram, AiOutlineGithub } from "react-icons/ai";
 import { FaLinkedinIn } from "react-icons/fa";
 import { RiTwitterXFill } from "react-icons/ri";
@@ -14,8 +14,8 @@ export function Home() {
 
   return (
     <div className="flex flex-col w-full py-4 items-center justify-center cursor-default">
-      <Link to="/">
-        <img src={logoImg} alt="Linker" className="w-52 h-auto my-5" />
+      <Link to="/admin">
+        <img src={logoImg} alt="Linker" className="w-52 h-auto my-8" />
       </Link>
 
       <h1 className="md:text-4xl text-2xl font-bold text-white">
@@ -26,8 +26,8 @@ export function Home() {
       <div className="h-px border-b border-white w-11/12 max-w-xl my-5"></div>
 
       <div className="flex items-center text-gray-50 mb-5">
-        <span>Confira meus links</span>
-        <FiLink className="ml-2" />
+        <span>Confira meus projetos</span>
+        <FiFolder className="ml-2" />
       </div>
 
       <main className="flex flex-col w-11/12 max-w-xl text-center">
